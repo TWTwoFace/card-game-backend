@@ -28,7 +28,7 @@ async def get_user_by_id(user_id: int):
 @app.get("/users")
 async def get_users():
     try:
-        record = await database.fetch('SELECT * FROM users')
+        record = await database.fetchmany('SELECT * FROM users')
     except Exception as e:
         print(e)
         raise HTTPException(status_code=400, detail="Something went wrong")
