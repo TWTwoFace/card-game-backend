@@ -36,8 +36,8 @@ async def get_users():
 @app.post("/users")
 async def add_user(login: str, password: str, nickname: str):
     try:
-        record = await database.execute(f"INSERT INTO users (login, password_hash, nickname, money)"
-                                        f"VALUES ('{login}','{hash(password)}', '{nickname}', '1000'")
+        record = await database.execute(f"INSERT INTO users (login, password_hash, nickname, money) "
+                                        f"VALUES ('{login}','{hash(password)}', '{nickname}', '1000')")
     except:
         raise HTTPException(status_code=401, detail="User with this params already exists")
 
