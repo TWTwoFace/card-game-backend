@@ -1,26 +1,48 @@
-import psycopg2
+from asyncpg.connection import Connection, connect
+from asyncpg import create_pool, Pool
+from asyncpg import Record
+import json
 
 from src.config.env import DB_HOST, DB_PORT, DB_NAME, DB_PASSWORD, DB_USERNAME
 
 
 class Database:
 
-    def __init__(self):
-        self._connection = psycopg2.connect(
-            dbname=DB_NAME, host=DB_HOST,
-            port=DB_PORT, user=DB_USERNAME,
-            password=DB_PASSWORD)
+    _connection: Connection
+    _pool: Pool
 
-    def execute_query(self, query: str):
-        with self._connection.cursor() as cursor:
-            cursor.execute(query)
-            response = cursor.fetchall()
+    async def connect(self):
+        self._connection = await connect(
+            database=DB_NAME,
+            host=DB_HOST,
+            port=DB_PORT,
+            user=DB_USERNAME,
+            password=DB_PASSWORD
+        )
+
+        await self._connection.set_type_codec(
+            'json',
+            encoder=json.dumps,
+            decoder=json.loads,
+            schema='pg_catalog'
+        )
+
+    async def execute(self, query: str) -> None:
+        await self._connection.execute(query)
+
+    async def fetchone(self, query: str):
+        response = await self._connection.fetchrow(query)
         return response
 
-    def commit(self):
-        self._connection.commit()
+    async def fetchmany(self, query: str) -> list[Record]:
+        response = await self._connection.fetch(query)
+        return response
+
+    async def disconnect(self) -> None:
+        await self._connection.close()
 
     def __del__(self):
-        self._connection.close()
+        task = self.disconnect()
+
 
 database = Database()
