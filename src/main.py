@@ -18,7 +18,8 @@ app = FastAPI(lifespan=lifespan)
 async def get_user_by_id(user_id: int):
     try:
         record = await database.fetchone(f"SELECT * FROM users WHERE id='{user_id}'")
-    except:
+    except Exception as e:
+        print(e)
         raise HTTPException(status_code=401, detail="User with this id does not exists")
 
     return {"data": f"{record}"}
@@ -28,7 +29,8 @@ async def get_user_by_id(user_id: int):
 async def get_users():
     try:
         record = await database.fetch('SELECT * FROM users')
-    except:
+    except Exception as e:
+        print(e)
         raise HTTPException(status_code=400, detail="Something went wrong")
     return {"data": f"{record}"}
 
@@ -38,7 +40,8 @@ async def add_user(login: str, password: str, nickname: str):
     try:
         record = await database.execute(f"INSERT INTO users (login, password_hash, nickname, money) "
                                         f"VALUES ('{login}','{hash(password)}', '{nickname}', '1000')")
-    except:
+    except Exception as e:
+        print(e)
         raise HTTPException(status_code=401, detail="User with this params already exists")
 
     return {"ok": True}
@@ -48,7 +51,8 @@ async def add_user(login: str, password: str, nickname: str):
 async def delete_user(user_id: int):
     try:
         record = await database.execute(f"DELETE FROM users WHERE id='{user_id}'")
-    except:
+    except Exception as e:
+        print(e)
         raise HTTPException(status_code=401, detail="User with this id does not exists")
 
     return {"ok": True}
