@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from src.auth import get_current_user_id
-from src.models.clans import ClanCreatingScheme, ClanChangeScheme
+from src.models.clans import ClanCreatingSchema, ClanChangeSchema
 from src.repositories.clans import ClanRepository
 
 router = APIRouter(prefix='/clans', tags=['Clans'])
 
 
 @router.post('')
-async def create_clan(clan: ClanCreatingScheme, owner_id: int = Depends(get_current_user_id)):
+async def create_clan(clan: ClanCreatingSchema, owner_id: int = Depends(get_current_user_id)):
     result = await ClanRepository.create_clan(owner_id, clan)
 
     if not result:
@@ -18,7 +18,7 @@ async def create_clan(clan: ClanCreatingScheme, owner_id: int = Depends(get_curr
 
 
 @router.patch('')
-async def change_clan(clan: ClanChangeScheme, owner_id: int = Depends(get_current_user_id)):
+async def change_clan(clan: ClanChangeSchema, owner_id: int = Depends(get_current_user_id)):
     avatar = False
     description = False
 

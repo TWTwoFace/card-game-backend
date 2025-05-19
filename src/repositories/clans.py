@@ -1,11 +1,11 @@
-from src.models.clans import ClanCreatingScheme, ClanScheme, ClanChangeScheme
+from src.models.clans import ClanCreatingSchema, ClanSchema, ClanChangeSchema
 from src.database import database as db
 from src.models.users import UserSchema
 
 
 class ClanRepository:
     @staticmethod
-    async def create_clan(owner_id: int, clan: ClanCreatingScheme) -> bool:
+    async def create_clan(owner_id: int, clan: ClanCreatingSchema) -> bool:
         try:
             record = await db.fetchone(f"SELECT * FROM users WHERE id='{owner_id}'")
             user = UserSchema(**record)
@@ -18,7 +18,7 @@ class ClanRepository:
 
             record = await db.fetchone(f"SELECT * FROM clans WHERE owner_id='{owner_id}'")
 
-            clan = ClanScheme(**record)
+            clan = ClanSchema(**record)
             await db.execute(f"UPDATE users SET clan_id='{clan.id}'")
 
             return True
@@ -27,7 +27,7 @@ class ClanRepository:
             return False
 
     @staticmethod
-    async def change_description(owner_id: int, clan_change: ClanChangeScheme) -> bool:
+    async def change_description(owner_id: int, clan_change: ClanChangeSchema) -> bool:
         if clan_change.description is None:
             return False
         try:
@@ -35,7 +35,7 @@ class ClanRepository:
             if record is None:
                 return False
 
-            clan = ClanScheme(**record)
+            clan = ClanSchema(**record)
 
             await db.execute(f"UPDATE clans SET description='{clan_change.description}' WHERE id='{clan.id}'")
             return True
@@ -44,7 +44,7 @@ class ClanRepository:
             return False
 
     @staticmethod
-    async def change_avatar(owner_id: int, clan_change: ClanChangeScheme) -> bool:
+    async def change_avatar(owner_id: int, clan_change: ClanChangeSchema) -> bool:
         if clan_change.avatar is None:
             return False
         try:
@@ -52,7 +52,7 @@ class ClanRepository:
             if record is None:
                 return False
 
-            clan = ClanScheme(**record)
+            clan = ClanSchema(**record)
 
             await db.execute(f"UPDATE clans SET avatar='{clan_change.avatar}' WHERE id='{clan.id}'")
             return True
@@ -67,7 +67,7 @@ class ClanRepository:
             if record is None:
                 return False
 
-            clan = ClanScheme(**record)
+            clan = ClanSchema(**record)
 
             await db.execute(f"DELETE FROM clans WHERE id='{clan.id}'")
             return True
@@ -76,20 +76,20 @@ class ClanRepository:
             return False
 
     @staticmethod
-    async def get_clans() -> list[ClanScheme]:
+    async def get_clans() -> list[ClanSchema]:
         try:
             record = await db.fetchmany('SELECT * FROM clans')
-            clans = [ClanScheme(**i) for i in record]
+            clans = [ClanSchema(**i) for i in record]
 
             return clans
         except Exception as e:
             print(e)
 
     @staticmethod
-    async def get_clan_by_id(clan_id: int) -> ClanScheme:
+    async def get_clan_by_id(clan_id: int) -> ClanSchema:
         try:
             record = await db.fetchone(f"SELECT * FROM clans WHERE id='{clan_id}'")
-            clan = ClanScheme(**record)
+            clan = ClanSchema(**record)
 
             return clan
         except Exception as e:
