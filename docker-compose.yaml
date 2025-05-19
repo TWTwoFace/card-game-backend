@@ -13,6 +13,8 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
+      JWT_ACCESS_KEY: ${JWT_ACCESS_KEY}
+      JWT_ALGORITHM: ${JWT_ALGORITHM}
     ports:
       - 8000:8000
 
