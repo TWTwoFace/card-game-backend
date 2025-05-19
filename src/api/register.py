@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from src.models.users import UserRegisterSchema
 from src.repositories.users import UserRepository
 
-router = APIRouter(prefix='/register')
+router = APIRouter(prefix='/register', tags=["Registration"])
 
 
 @router.post("")

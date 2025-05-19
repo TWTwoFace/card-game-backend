@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from typing import Optional
 
-from fastapi import Header
+from fastapi import Header, Depends
 from jwt import encode, decode, InvalidTokenError
 
 from src.config.env import JWT_ACCESS_KEY, JWT_ALGORITHM
@@ -27,3 +27,13 @@ def validate_user(uid: int, token: Optional[str]):
 
 def get_current_token(token: str = Header(alias='x-auth-static-token')):
     return token
+
+
+def get_current_user_id(token: Optional[str] = Depends(get_current_token)) -> Optional[int]:
+    if token is None:
+        return None
+    try:
+        payload = decode(jwt=token, key=JWT_ACCESS_KEY, algorithms=JWT_ALGORITHM)
+        return payload['id']
+    except InvalidTokenError as e:
+        return None

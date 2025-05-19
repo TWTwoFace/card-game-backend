@@ -4,7 +4,7 @@ from src.auth import create_token
 from src.models.users import UserLoginSchema, UserSchema
 from src.repositories.users import UserRepository
 
-router = APIRouter(prefix='/login')
+router = APIRouter(prefix='/login', tags=["Login"])
 
 
 @router.post('')

@@ -51,11 +51,11 @@ class UserRepository:
     async def login_user(user: UserLoginSchema) -> Optional[UserSchema]:
         try:
             record = await db.fetchone(f"SELECT * FROM users "
-                                       f"WHERE login='{user.login}")
+                                       f"WHERE login='{user.login}'")
             if record is None:
                 return None
 
-            if not check_password(user.password, record['hashed_password']):
+            if not check_password(user.password, record['password_hash']):
                 return None
 
             logged_user = UserSchema(**record)
@@ -66,7 +66,13 @@ class UserRepository:
             print(e)
 
     @staticmethod
-    async def increase_money(user_id: int):
-        pass
+    async def change_money(user_id: int, new_money_count: int):
+        if new_money_count < 0:
+            return
+        try:
+            await db.execute(f"UPDATE users SET money='{new_money_count}' WHERE id='{user_id}'")
+
+        except Exception as e:
+            print(e)
 
 
