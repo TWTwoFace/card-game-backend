@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
 from src.auth import create_token
-from src.models.users import UserLoginSchema
+from src.models.users import UserLoginSchema, UserSchema
 from src.repositories.users import UserRepository
 
 router = APIRouter(prefix='/login')
