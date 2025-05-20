@@ -1,6 +1,7 @@
 from typing import Optional
 
-from src.models.clans import ClanCreatingSchema, ClanSchema, ClanChangeSchema, ClanActionCreationSchema
+from src.models.clans import ClanCreatingSchema, ClanSchema, ClanChangeSchema, ClanActionCreationSchema, \
+    ClanActionSchema
 from src.database import database as db
 from src.models.users import UserSchema
 
@@ -121,3 +122,12 @@ class ClanRepository:
         except Exception as e:
             print(e)
             return False
+
+    @staticmethod
+    async def get_clan_actions(clan_id: int) -> Optional[ClanActionSchema]:
+        try:
+            record = await db.fetchmany(f"SELECT * FROM clan_actions WHERE clan_id='{clan_id}'")
+            actions = [ClanActionSchema(**i) for i in record]
+            return actions
+        except Exception as e:
+            print(e)

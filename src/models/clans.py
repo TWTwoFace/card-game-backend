@@ -21,3 +21,9 @@ class ClanChangeSchema(BaseModel):
 
 class ClanActionCreationSchema(BaseModel):
     description: str = Field(min_length=5, max_length=100)
+
+
+class ClanActionSchema(ClanActionCreationSchema):
+    id: int
+    user_id: int
+    clan_id: int

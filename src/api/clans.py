@@ -106,3 +106,13 @@ async def create_clan_action(action: ClanActionCreationSchema, user_id: int = De
         raise HTTPException(status_code=400, detail='Bad request')
 
     return {'ok': True}
+
+
+@router.get('/{clan_id}/clan_actions')
+async def get_clan_actions(clan_id: int):
+    actions = await ClanRepository.get_clan_actions(clan_id)
+
+    if actions is None:
+        return HTTPException(status_code=400, detail='Bad request')
+
+    return {'data': actions}
