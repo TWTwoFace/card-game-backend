@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from src.auth import get_current_user_id
 from src.models.clans import ClanCreatingSchema, ClanChangeSchema
 from src.repositories.clans import ClanRepository
+from src.repositories.users import UserRepository
 
 router = APIRouter(prefix='/clans', tags=['Clans'])
 
@@ -68,3 +69,30 @@ async def delete_clan(owner_id: int = Depends(get_current_user_id)):
         raise HTTPException(status_code=400, detail='Bad request')
 
     return {'ok': True}
+
+
+@router.post("/users")
+async def join_clan(clan_id: int, user_id: int = Depends(get_current_user_id)):
+    result = await UserRepository.join_clan(user_id, clan_id)
+
+    if not result:
+        raise HTTPException(status_code=400, detail='Bad request')
+
+    return {'ok': True}
+
+
+@router.delete("/users")
+async def left_clan(user_id: int = Depends(get_current_user_id)):
+    result = await UserRepository.left_clan(user_id)
+
+    if not result:
+        raise HTTPException(status_code=400, detail='Bad request')
+
+    return {'ok': True}
+
+
+@router.get('/{clan_id}/users')
+async def get_clan_members(clan_id: int):
+    users = await ClanRepository.get_clan_members(clan_id)
+
+    return {'data': users}

@@ -3,6 +3,7 @@ from typing import Optional
 from fastapi import HTTPException
 
 from src.database import database as db
+from src.models.clans import ClanSchema
 from src.models.users import UserRegisterSchema, UserSchema, UserLoginSchema
 from src.utils.security import hash_password, check_password
 
@@ -59,9 +60,7 @@ class UserRepository:
                 return None
 
             logged_user = UserSchema(**record)
-            print(logged_user)
             return logged_user
-
         except Exception as e:
             print(e)
 
@@ -75,4 +74,47 @@ class UserRepository:
         except Exception as e:
             print(e)
 
+    @staticmethod
+    async def join_clan(user_id: int, clan_id: int) -> bool:
+        try:
+            record = await db.fetchone(f"SELECT * FROM users WHERE id='{user_id}'")
+            user = UserSchema(**record)
+
+            if user.clan_id is not None:
+                return False
+
+            record = await db.fetchmany(f"SELECT * FROM users WHERE clan_id='{clan_id}'")
+            clan_members = [UserSchema(**i) for i in record]
+
+            if len(clan_members) >= 30:
+                return False
+
+            await db.execute(f"UPDATE users SET clan_id='{clan_id}' WHERE id='{user_id}'")
+
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+    @staticmethod
+    async def left_clan(user_id: int):
+        try:
+            record = await db.fetchone(f"SELECT * FROM users WHERE id='{user_id}'")
+            user = UserSchema(**record)
+
+            if user.clan_id is None:
+                return False
+
+            record = await db.fetchone(f"SELECT * FROM clans WHERE id='{user.clan_id}'")
+            clan = ClanSchema(**record)
+
+            if clan is not None and clan.owner_id == user.id:
+                return False
+
+            await db.execute(f"UPDATE users SET clan_id=NULL WHERE id='{user.id}'")
+
+            return True
+        except Exception as e:
+            print(e)
+            return False
 

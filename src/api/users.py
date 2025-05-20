@@ -1,5 +1,4 @@
 import fastapi
-from starlette.responses import JSONResponse
 
 from src.auth import validate_user, get_current_token
 from src.repositories.users import UserRepository
@@ -30,4 +29,6 @@ async def delete_user(user_id: int, token: str = fastapi.Depends(get_current_tok
     await UserRepository.delete_user(user_id)
 
     return {"ok": True}
+
+
 

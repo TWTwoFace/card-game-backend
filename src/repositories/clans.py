@@ -1,3 +1,5 @@
+from typing import Optional
+
 from src.models.clans import ClanCreatingSchema, ClanSchema, ClanChangeSchema
 from src.database import database as db
 from src.models.users import UserSchema
@@ -92,5 +94,14 @@ class ClanRepository:
             clan = ClanSchema(**record)
 
             return clan
+        except Exception as e:
+            print(e)
+
+    @staticmethod
+    async def get_clan_members(clan_id: int) -> Optional[list[UserSchema]]:
+        try:
+            record = await db.fetchmany(f"SELECT * FROM users WHERE clan_id='{clan_id}'")
+            users = [UserSchema(**i) for i in record]
+            return users
         except Exception as e:
             print(e)
