@@ -5,6 +5,8 @@ from src.api.register import router as reg_router
 from src.api.login import router as log_router
 from src.api.clans import router as clans_router
 from src.api.statistics import router as stats_router
+from src.api.cards import router as cards_router
+from src.api.clan_actions import router as clan_act_router
 
 
 __all__ = [
@@ -16,6 +18,8 @@ main_router = APIRouter()
 
 main_router.include_router(users_router)
 main_router.include_router(stats_router)
+main_router.include_router(cards_router)
 main_router.include_router(reg_router)
 main_router.include_router(log_router)
 main_router.include_router(clans_router)
+main_router.include_router(clan_act_router)

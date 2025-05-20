@@ -65,14 +65,15 @@ class UserRepository:
             print(e)
 
     @staticmethod
-    async def change_money(user_id: int, new_money_count: int):
+    async def change_money(user_id: int, new_money_count: int) -> bool:
         if new_money_count < 0:
-            return
+            return False
         try:
             await db.execute(f"UPDATE users SET money='{new_money_count}' WHERE id='{user_id}'")
-
+            return True
         except Exception as e:
             print(e)
+            return False
 
     @staticmethod
     async def join_clan(user_id: int, clan_id: int) -> bool:
