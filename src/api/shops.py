@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from src.auth import get_current_user_id
 from src.repositories.shops import ShopRepository
 
-router = APIRouter(prefix='/shop', tags=['Shop'])
+router = APIRouter(prefix='/shops', tags=['Shop'])
 
 
 @router.get('')

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
 from src.repositories.statistics import StatisticsRepository
+from src.repositories.users import UserRepository
 
 router = APIRouter(tags=["Statistics"])
 
@@ -14,3 +15,11 @@ async def get_user_statistics(user_id: int):
 
     return {'data': stats}
 
+
+@router.get('/statistics/top')
+async def get_top_users():
+    top = await UserRepository.get_top_users(100)
+
+    if top is None:
+        raise HTTPException(status_code=400, detail='Bad request')
+    return {'data': top}

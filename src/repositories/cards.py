@@ -1,8 +1,8 @@
 from typing import Optional
 
-from src.config.cards import CARD_BASE_POWER, UPGRADE_COST_MULTIPLIER
+from src.config.cards import CARD_BASE_POWER, UPGRADE_COST_MULTIPLIER, POWER_PER_UPGRADE
 from src.database import database as db
-from src.models.cards import CardCreationSchema, CardSchema
+from src.models.cards import CardSchema
 from src.repositories.users import UserRepository
 
 
@@ -35,7 +35,8 @@ class CardRepository:
             if not result:
                 return False
 
-            await db.execute(f"UPDATE cards SET level=level+1 WHERE user_id='{user.id}' AND id={card_id}")
+            await db.execute(f"UPDATE cards SET level=level+1, power=power+'{POWER_PER_UPGRADE}' "
+                             f"WHERE user_id='{user.id}' AND id={card_id}")
 
             return True
         except Exception as e:

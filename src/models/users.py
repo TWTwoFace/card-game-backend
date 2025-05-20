@@ -6,10 +6,8 @@ from pydantic import BaseModel, Field
 class UserSchema(BaseModel):
     id: int
     nickname: str = Field(min_length=5, max_length=20)
-    login: str = Field(min_length=5, max_length=20)
     money: int = Field(ge=0)
     clan_id: Optional[int]
-    model_config = {}
 
 
 class UserLoginSchema(BaseModel):

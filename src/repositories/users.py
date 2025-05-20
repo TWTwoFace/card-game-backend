@@ -4,6 +4,7 @@ from fastapi import HTTPException
 
 from src.database import database as db
 from src.models.clans import ClanSchema
+from src.models.statistics import UserStatisticsSchema
 from src.models.users import UserRegisterSchema, UserSchema, UserLoginSchema
 from src.utils.security import hash_password, check_password
 
@@ -118,4 +119,25 @@ class UserRepository:
         except Exception as e:
             print(e)
             return False
+
+    @staticmethod
+    async def get_top_users(count: int):
+        try:
+            record = await db.fetchmany(f"SELECT users.id, users.nickname, users.money, users.clan_id, "
+                                        f"statistics.user_id, statistics.win_count, statistics.matches_count,"
+                                        f" statistics.max_rating, statistics.current_rating "
+                                        f"FROM users INNER JOIN statistics "
+                                        f"ON statistics.user_id=users.id "
+                                        f"ORDER BY statistics.current_rating")
+            statistics_by_user = [
+                {
+                    'user': UserSchema(**i),
+                    'statistics': UserStatisticsSchema(**i)
+                }
+                for i in record
+            ]
+
+            return statistics_by_user
+        except Exception as e:
+            print(e)
 

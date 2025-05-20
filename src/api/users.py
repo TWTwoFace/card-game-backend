@@ -30,5 +30,3 @@ async def delete_user(user_id: int, token: str = fastapi.Depends(get_current_tok
 
     return {"ok": True}
 
-
-
