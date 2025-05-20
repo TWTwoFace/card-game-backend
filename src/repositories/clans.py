@@ -1,6 +1,6 @@
 from typing import Optional
 
-from src.models.clans import ClanCreatingSchema, ClanSchema, ClanChangeSchema
+from src.models.clans import ClanCreatingSchema, ClanSchema, ClanChangeSchema, ClanActionCreationSchema
 from src.database import database as db
 from src.models.users import UserSchema
 
@@ -105,3 +105,19 @@ class ClanRepository:
             return users
         except Exception as e:
             print(e)
+
+    @staticmethod
+    async def create_clan_action(user_id: int, action: ClanActionCreationSchema) -> bool:
+        try:
+            record = await db.fetchone(f"SELECT * FROM users WHERE id='{user_id}'")
+            user = UserSchema(**record)
+
+            if record is None or user.clan_id is None:
+                return False
+
+            await db.execute(f"INSERT INTO clan_actions (user_id, clan_id, description)"
+                             f"VALUES ('{user.id}', '{user.clan_id}', '{action.description}')")
+            return True
+        except Exception as e:
+            print(e)
+            return False

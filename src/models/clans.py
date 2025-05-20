@@ -17,3 +17,7 @@ class ClanSchema(ClanCreatingSchema):
 class ClanChangeSchema(BaseModel):
     description: Annotated[Optional[str], Field(min_length=5, max_length=100)] = None
     avatar: Annotated[Optional[int], Field(ge=0, le=9)] = None
+
+
+class ClanActionCreationSchema(BaseModel):
+    description: str = Field(min_length=5, max_length=100)
