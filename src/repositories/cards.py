@@ -3,20 +3,19 @@ from typing import Optional
 from src.config.cards import CARD_BASE_POWER, UPGRADE_COST_MULTIPLIER
 from src.database import database as db
 from src.models.cards import CardCreationSchema, CardSchema
-
 from src.repositories.users import UserRepository
 
 
 class CardRepository:
     @staticmethod
-    async def add_card(user_id: int, card: CardCreationSchema) -> bool:
+    async def add_card(user_id: int, card_id: int) -> bool:
         try:
-            record = db.fetchone(f"SELECT COUNT(*) FROM cards WHERE user_id='{user_id}' AND card_id='{card.card_id}'")
+            record = await db.fetchone(f"SELECT COUNT(*) FROM cards WHERE user_id='{user_id}' AND card_id='{card_id}'")
             if record["count"] != 0:
                 return False
 
             await db.execute(f"INSERT INTO cards (user_id, card_id, power)"
-                             f"VALUES ('{user_id}', '{card.card_id}', '{CARD_BASE_POWER[card.card_id]}')")
+                             f"VALUES ('{user_id}', '{card_id}', '{CARD_BASE_POWER[card_id]}')")
 
             return True
         except Exception as e:
@@ -46,7 +45,7 @@ class CardRepository:
     @staticmethod
     async def get_cards_by_user_id(user_id: int) -> Optional[list[CardSchema]]:
         try:
-            record = db.fetchmany(f"SELECT * FROM cards WHERE user_id='{user_id}'")
+            record = await db.fetchmany(f"SELECT * FROM cards WHERE user_id='{user_id}'")
 
             cards = [CardSchema(**i) for i in record]
 
