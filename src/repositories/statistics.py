@@ -21,7 +21,7 @@ class StatisticsRepository:
                              f" matches_count=matches_count+1,"
                              f" win_count=win_count+1,"
                              f" current_rating=current_rating+{RATING_PER_WIN},"
-                             f" max_rating=MAX(max_rating, current_rating)"
+                             f" max_rating=GREATEST(max_rating, current_rating)"
                              f"WHERE user_id = '{user_id}'")
 
             return True
@@ -35,7 +35,7 @@ class StatisticsRepository:
             await db.execute(f"UPDATE statistics "
                              f"SET"
                              f" matches_count=matches_count+1,"
-                             f" current_rating=MAX(current_rating-{RATING_PER_LOOSE}),"
+                             f" current_rating=GREATEST(current_rating-{RATING_PER_LOOSE}),"
                              f"WHERE user_id = '{user_id}'")
 
             return True

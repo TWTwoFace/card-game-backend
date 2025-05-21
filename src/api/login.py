@@ -11,7 +11,7 @@ router = APIRouter(prefix='/login', tags=["Login"])
 async def login(user: UserLoginSchema):
     logged_user = await UserRepository.login_user(user)
 
-    if logged_user is not None and logged_user.login == user.login:
+    if logged_user is not None:
         data = {"id": logged_user.id, "nickname": logged_user.nickname, "money": logged_user.money}
         access_token = create_token(data)
         return {"ok": True, "access_token": access_token, "user": logged_user}

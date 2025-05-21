@@ -37,3 +37,11 @@ def get_current_user_id(token: Optional[str] = Depends(get_current_token)) -> Op
         return payload['id']
     except InvalidTokenError as e:
         raise HTTPException(status_code=401, detail='Not authorized')
+
+
+def validate_token(token: Optional[str] = Depends(get_current_token)):
+    try:
+        payload = decode(jwt=token, key=JWT_ACCESS_KEY, algorithms=JWT_ALGORITHM)
+        return token
+    except InvalidTokenError:
+        raise HTTPException(status_code=401, detail='Not authorized')

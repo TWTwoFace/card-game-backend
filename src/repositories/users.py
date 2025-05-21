@@ -128,7 +128,7 @@ class UserRepository:
                                         f" statistics.max_rating, statistics.current_rating "
                                         f"FROM users INNER JOIN statistics "
                                         f"ON statistics.user_id=users.id "
-                                        f"ORDER BY statistics.current_rating")
+                                        f"ORDER BY MAX(statistics.current_rating) LIMIT {count}")
             statistics_by_user = [
                 {
                     'user': UserSchema(**i),
