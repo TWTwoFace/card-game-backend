@@ -27,3 +27,9 @@ async def get_user_cards(user_id: int):
         raise HTTPException(status_code=400, detail='Bad request')
 
     return cards
+
+
+
+
+
+

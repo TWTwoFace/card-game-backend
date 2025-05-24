@@ -10,6 +10,7 @@ from src.api.clan_actions import router as clan_act_router
 from src.api.shops import router as shops_router
 from src.api.matchmaking import router as matchmaking_router
 from src.api.match_statistics import router as matches_router
+from src.api.decks import router as decks_router
 
 
 __all__ = [
@@ -22,6 +23,7 @@ main_router = APIRouter()
 main_router.include_router(users_router)
 main_router.include_router(stats_router)
 main_router.include_router(cards_router)
+main_router.include_router(decks_router)
 main_router.include_router(matches_router)
 main_router.include_router(reg_router)
 main_router.include_router(log_router)
