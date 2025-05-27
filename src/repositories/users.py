@@ -126,9 +126,9 @@ class UserRepository:
             record = await db.fetchmany(f"SELECT users.id, users.nickname, users.money, users.clan_id, "
                                         f"statistics.user_id, statistics.win_count, statistics.matches_count,"
                                         f" statistics.max_rating, statistics.current_rating "
-                                        f"FROM users INNER JOIN statistics "
+                                        f"FROM users JOIN statistics "
                                         f"ON statistics.user_id=users.id "
-                                        f"ORDER BY MAX(statistics.current_rating) LIMIT {count}")
+                                        f"ORDER BY statistics.current_rating DESC LIMIT {count}")
             statistics_by_user = [
                 {
                     'user': UserSchema(**i),
