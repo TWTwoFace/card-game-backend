@@ -22,7 +22,7 @@ class ClanRepository:
             record = await db.fetchone(f"SELECT * FROM clans WHERE owner_id='{owner_id}'")
 
             clan = ClanSchema(**record)
-            await db.execute(f"UPDATE users SET clan_id='{clan.id}'")
+            await db.execute(f"UPDATE users SET clan_id='{clan.id}' WHERE id='{owner_id}'")
 
             return True
         except Exception as e:
