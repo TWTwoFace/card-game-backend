@@ -13,7 +13,7 @@ class DeckRepository:
             record = await db.fetchone(f"SELECT COUNT(*) "
                                        f"FROM decks WHERE deck_number='{deck_number}' and user_id='{user_id}'")
 
-            if record['count']:
+            if record['count'] > 0:
                 return False
 
             await db.execute(f"INSERT INTO decks (user_id, deck_number) "
