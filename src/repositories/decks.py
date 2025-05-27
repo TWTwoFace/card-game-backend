@@ -53,7 +53,7 @@ class DeckRepository:
     @staticmethod
     async def get_user_deck(user_id: int, deck_number: int) -> Optional[list[CardSchema]]:
         try:
-            record = await db.fetchone(f"SELECT * FROM decks WHERE deck_number='{deck_number}'")
+            record = await db.fetchone(f"SELECT * FROM decks WHERE deck_number='{deck_number}' AND user_id='{user_id}'")
             deck = DeckSchema(**record)
 
             record = await db.fetchmany(f"SELECT * FROM cards WHERE user_id='{user_id}' AND deck_id='{deck.id}'")
